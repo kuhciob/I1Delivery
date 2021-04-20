@@ -1,0 +1,63 @@
+﻿@model IEnumerable<KURSOVA.Models.Invoice>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Рахунки</h1>
+
+<p>
+    <button class="btn-secondary" onclick="location.href='@Url.Action("Create")'" style="padding:10px" hidden>
+        Створити
+    </button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.OrderId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.InvoiceId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.InvoiceId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.InvoiceId">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<KURSOVA.Models.RestaurantDishRelation>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Меню</h1>
+
+<p>
+    
+    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            @if (AccessInfo.UserType == Constants.RestAdmin)
+            {
+                <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Create")'" style="padding:10px">
+                    Створити
+                </button>
+            }
+
+            <form asp-action="Index" method="get" class="btn-group mr-2">
+                <div class="input-group mr-2">
+                    <select name="restaurantID" class="form-control"
+                            aria-label="Ресторан" aria-describedby="btnGroupAddon" asp-items="ViewBag.RestaurantId">
+                        <option value="">- всі ресторани -</option>
+                    </select>
+                </div>
+                <div class="input-group mr-2">
+                    <input type="text" class="form-control" placeholder="Назва страви" aria-label="Назва страви"
+                           aria-describedby="btnGroupAddon" name="dishName" />
+                </div>
+                <input type="submit" value="Фільтрувати" class="btn btn-outline-primary" />
+            </form>
+        </div>
+
+
+    </div>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Dish)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.Dish.Title)
+            </td>
+            <td>
+                @Html.Raw( $"{item.Restaurant.Title}(id:{item.Restaurant.RestaurantId})")
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RestaurantDishRelationId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.RestaurantDishRelationId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.RestaurantDishRelationId">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

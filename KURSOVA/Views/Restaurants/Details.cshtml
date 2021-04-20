@@ -1,0 +1,41 @@
+﻿@model KURSOVA.Models.Restaurant
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Деталі</h1>
+
+<div>
+    <h4>Ресторан</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw($"{Model.Location.Street.District.City.City1}," +
+           $"{Model.Location.Street.District.District1}," +
+           $"{Model.Location.Street.Street1}," +
+           $"{Model.Location.BuildingNbr}/{Model.Location.Room}")
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.RestaurantId">Редагувати</a> |
+    <a asp-action="Index">Назад</a>
+</div>

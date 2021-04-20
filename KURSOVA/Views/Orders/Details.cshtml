@@ -1,0 +1,321 @@
+﻿@model KURSOVA.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Замовлення "@Model.OrderId"</h1>
+
+<div>
+
+    <hr />
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            @if (AccessInfo.UserType == Constants.Operator)
+            {
+                <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Edit", "Orders", new { id = @Model.OrderId })'" style="padding:10px">
+                    Редагувати
+                </button>
+
+                <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Delete", "Orders", new { id = @Model.OrderId })'" style="padding: 10px">
+                    Видалити
+                </button>
+            }
+
+            <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Index", "Orders")'" style="padding: 10px">
+                Назад
+            </button>
+            @if (AccessInfo.UserType == Constants.Operator && Model.Status == OrderStatus.Created)
+            {
+                <button class="btn-outline-primary mr-2" onclick="location.href='@Url.Action("Create", "OrderLines", new { orderId = @Model.OrderId})'"
+                        style="padding: 10px" @Html.Raw(Model.Status == OrderStatus.Created ? "" : "disabled")>
+                    Додати позицію
+                </button>
+            }
+
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+            @if (AccessInfo.UserType == Constants.Operator)
+            {
+                <form asp-controller="Orders" asp-action="Process" method="post" asp-route-id="@Model.OrderId">
+                    <button class="btn-primary " style="padding: 10px" @Html.Raw(Model.Status == OrderStatus.Created && (Model.Status != OrderStatus.Closed && Model.Status != OrderStatus.Canceled) ? "" : "disabled")>
+                        Передати на кухню
+                    </button>
+                </form>
+            }
+            @if (AccessInfo.UserType == Constants.RestAdmin)
+            {
+                <form asp-controller="Orders" asp-action="Complete" method="post" asp-route-id="@Model.OrderId">
+                    <button class="btn-primary" style="padding: 10px" @Html.Raw(Model.Status == OrderStatus.InProcess && (Model.Status != OrderStatus.Closed && Model.Status != OrderStatus.Canceled) ? "" : "disabled")>
+                        Закінчити приготування
+                    </button>
+                </form>
+            }
+
+            @if (AccessInfo.UserType == Constants.DelivAdmin)
+            {
+                <button class="btn-primary" onclick="location.href='@Url.Action("Create", "Deliveries", new { deliveryOrderId = @Model.OrderId })'"
+                        style="padding: 10px" @Html.Raw(Model.Status == OrderStatus.Completed && (Model.Status != OrderStatus.Canceled) ? "" : "disabled")>
+                    @Html.Raw(Model.Delivery.Count > 0 ? "Переглянути Доставку" : " Створити Доставку")
+                </button>
+            }
+            @if (AccessInfo.UserType == Constants.Operator || AccessInfo.UserType == Constants.DelivAdmin)
+            {
+                <button class="btn-primary " onclick="location.href='@Url.Action("Create", "Invoices", new { orderId = @Model.OrderId })'"
+                        style="padding: 10px" @Html.Raw(Model.Delivery.Count > 0 && (Model.Status != OrderStatus.Closed && Model.Status != OrderStatus.Canceled) ? "" : "disabled")>
+                    Створити Рахунок
+                </button>
+                <form asp-controller="Orders" asp-action="Close" method="post" asp-route-id="@Model.OrderId">
+                    <button class="btn-primary" style="padding: 10px" @Html.Raw(Model.Status != OrderStatus.Closed && Model.Status != OrderStatus.Canceled ? "" : "disabled")>
+                        Завершити замовлення
+                    </button>
+                </form>
+            }
+
+            @if (AccessInfo.UserType == Constants.Operator)
+            {
+                <form asp-controller="Orders" asp-action="Cancel" method="post" asp-route-id="@Model.OrderId">
+                    <button class="btn-primary" style="padding: 10px" @Html.Raw(Model.Status != OrderStatus.Closed && Model.Status != OrderStatus.Canceled ? "" : "disabled")>
+                        Відмінити
+                    </button>
+                </form>
+            }
+
+        </div>
+
+    </div>
+
+
+
+    <hr />
+
+    <br />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalAmt)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalAmt)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.Name)
+        </dd>
+    </dl>
+</div>
+
+
+
+
+
+<ul class="nav nav-tabs">
+    <li><button class="nav-link active" data-toggle="tab" href="#home">Деталі</button></li>
+    <li><button class="nav-link" data-toggle="tab" href="#deliveries">Доставки</button></li>
+    <li><button class="nav-link" data-toggle="tab" href="#invoices">Рахунки</button></li>
+
+</ul>
+
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active show">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderLine.First().RestaurantDishRelation.Dish.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderLine.First().RestaurantDishRelation.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderLine.First().Quantity)
+                    </th>
+                    <th>
+                        @Html.Raw("Amount")
+                    </th>
+                    <th>
+                        @Html.Raw("portion")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderLine)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Dish.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @Html.Raw(item.Quantity * item.RestaurantDishRelation.Price)
+                        </td>
+                        <td>
+                            @Html.Raw($"{item.RestaurantDishRelation.Dish.Quantity} " +
+                           $"{item.RestaurantDishRelation.Dish.UnitOfMeasure.UnitOfMeasure1}")
+                        </td>
+                        <td>
+                            @if(Model.Status == OrderStatus.Created)
+                            {
+                            <noscript>
+                                <a asp-controller="OrderLines" asp-action="Edit" asp-route-id="@item.OrderLineId">Редагувати</a> |
+                                <a asp-controller="OrderLines" asp-action="Details" asp-route-id="@item.OrderLineId">Деталі</a> |
+                                <a asp-controller="OrderLines" asp-action="Delete" asp-route-id="@item.OrderLineId">Видалити</a>
+                            </noscript>
+                            }
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="deliveries" class="tab-pane fade">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.Raw("ID")
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Delivery.FirstOrDefault().StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Delivery.FirstOrDefault().EndTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Delivery.FirstOrDefault().Weight)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Delivery.FirstOrDefault().Courier)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Delivery.FirstOrDefault().Location)
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Delivery)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeliveryId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Courier.Name)
+                    </td>
+                    <td>
+                        @Html.Raw($"{item.Location.Street.District.City.City1}," +
+      $"{item.Location.Street.District.District1}," +
+      $"{item.Location.Street.Street1}," +
+      $"{item.Location.BuildingNbr}/{item.Location.Room}")
+                    </td>
+
+                    <td>
+                        <a asp-controller="Deliveries" asp-action="Edit" asp-route-id="@item.DeliveryId">Редагувати</a> |
+                        <a asp-controller="Deliveries" asp-action="Details" asp-route-id="@item.DeliveryId">Деталі</a> |
+                        <a asp-controller="Deliveries" asp-action="Delete" asp-route-id="@item.DeliveryId">Видалити</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="invoices" class="tab-pane fade">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Invoice.FirstOrDefault().DeliveryPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Invoice.FirstOrDefault().TotalAmt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Invoice.FirstOrDefault().Discount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Invoice.FirstOrDefault().DateTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Invoice.FirstOrDefault().Order)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Invoice)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeliveryPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalAmt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Discount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateTime)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Order.OrderId)
+                        </td>
+                        <td>
+                            <a asp-controller="Invoices" asp-action="Edit" asp-route-id="@item.InvoiceId">Редагувати</a> |
+                            <a asp-controller="Invoices" asp-action="Details" asp-route-id="@item.InvoiceId">Деталі</a> |
+                            <a asp-controller="Invoices" asp-action="Delete" asp-route-id="@item.InvoiceId">Видалити</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div />
+    </div>

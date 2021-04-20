@@ -1,0 +1,103 @@
+﻿@model KURSOVA.Models.Order
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Редагувати</h1>
+
+<h4>Замовлення</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OrderId" />
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="TotalAmtdisplay">@Html.DisplayNameFor(m => m.TotalAmt)</label>
+                <input name="TotalAmtdisplay" class="form-control" readonly value="@Model.TotalAmt"/>
+                <input asp-for="TotalAmt" class="form-control" readonly hidden/>
+
+            </div>
+            <div class="form-group">
+                <div>
+                    @Html.DisplayNameFor(m => m.Status)
+                    @Html.DisplayFor(m => m.Status)
+                    <input asp-for="Status" class="form-control" readonly hidden/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Зберегти" class="btn btn-primary"  />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад</a>
+</div>
+
+<p>
+    <a asp-controller="OrderLines" asp-action="Create" class="btn-primary p-1" 
+            asp-route-orderId="@Model.OrderId" >Додати позицію</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderLine.First().RestaurantDishRelation.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderLine.First().Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderLine.First().RestaurantDishRelation.Dish.Title)
+            </th>
+            <th>
+                @Html.Raw("Порція")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderLine)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Dish.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.Raw($"{item.RestaurantDishRelation.Dish.Quantity}{item.RestaurantDishRelation.Dish.UnitOfMeasure.UnitOfMeasure1}")
+            </td>
+            <td>
+                <a asp-controller="OrderLines" asp-action="Edit" asp-route-id="@item.OrderLineId">Редагувати</a> |
+                <a asp-controller="OrderLines" asp-action="Details" asp-route-id="@item.OrderLineId">Деталі</a> |
+                <a asp-controller="OrderLines" asp-action="Delete" asp-route-id="@item.OrderLineId">Видалити</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<KURSOVA.Models.OrderLine>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Позиції</h1>
+
+<p>
+   
+    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            @if (AccessInfo.UserType == Constants.Operator)
+            {
+                <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Create")'" style="padding:10px">
+                    Створити
+                </button>
+            }
+
+            <form asp-action="Index" method="get" class="btn-group mr-2">
+                <div class="input-group mr-2">
+                    <select name="restaurantID" class="form-control"
+                            aria-label="Ресторан" aria-describedby="btnGroupAddon" asp-items="ViewBag.RestaurantId">
+                        <option value="">- всі ресторани -</option>
+                    </select>
+                </div>
+                
+                <input type="submit" value="Фільтрувати" class="btn btn-outline-primary" />
+            </form>
+        </div>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RestaurantDishRelation.Dish.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RestaurantDishRelation.Dish.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RestaurantDishRelation.Dish.UnitOfMeasure.UnitOfMeasure1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RestaurantDishRelation.Restaurant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDateTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Dish.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Dish.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RestaurantDishRelation.Dish.UnitOfMeasure.UnitOfMeasure1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.Raw($"{item.RestaurantDishRelation.Restaurant.Title}(id:{item.RestaurantDishRelation.RestaurantId})")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDateTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.OrderLineId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.OrderLineId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.OrderLineId">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,71 @@
+﻿@model KURSOVA.Models.SalaryPayment
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Редагувати</h1>
+
+<h4>Заробітня Плата</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SalaryPaymentId" />
+            <div class="form-group">
+                <label asp-for="CourierId" class="control-label"></label>
+                <select asp-for="CourierId" class="form-control" asp-items="ViewBag.CourierId"></select>
+                <span asp-validation-for="CourierId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartPeriodDate" class="control-label"></label>
+                <input asp-for="StartPeriodDate" class="form-control" />
+                <span asp-validation-for="StartPeriodDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndPeriodDate" class="control-label"></label>
+                <input asp-for="EndPeriodDate" class="form-control" />
+                <span asp-validation-for="EndPeriodDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeliveriesCount" class="control-label"></label>
+                <input asp-for="DeliveriesCount" class="form-control" />
+                <span asp-validation-for="DeliveriesCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentForDeliveries" class="control-label"></label>
+                <input asp-for="PaymentForDeliveries" class="form-control" />
+                <span asp-validation-for="PaymentForDeliveries" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Premium" class="control-label"></label>
+                <input asp-for="Premium" class="form-control" />
+                <span asp-validation-for="Premium" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FineAmt" class="control-label"></label>
+                <input asp-for="FineAmt" class="form-control" />
+                <span asp-validation-for="FineAmt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentAmt" class="control-label"></label>
+                <input asp-for="PaymentAmt" class="form-control" />
+                <span asp-validation-for="PaymentAmt" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

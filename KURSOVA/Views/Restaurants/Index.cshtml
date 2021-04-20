@@ -1,0 +1,52 @@
+﻿@model IEnumerable<KURSOVA.Models.Restaurant>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Ресторани</h1>
+
+<p>
+    <button class="btn-secondary" onclick="location.href='@Url.Action("Create")'" style="padding:10px">
+        Створити
+    </button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.Raw($"{item.Location.Street.District.City.City1}, {item.Location.Street.District.District1}, " +
+                     $"{item.Location.Street.Street1}, {item.Location.BuildingNbr}/{item.Location.Room})")
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RestaurantId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.RestaurantId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.RestaurantId">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

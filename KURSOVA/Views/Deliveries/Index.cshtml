@@ -1,0 +1,102 @@
+﻿@model IEnumerable<KURSOVA.Models.Delivery>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Доставки</h1>
+
+<p>
+    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            @if (AccessInfo.UserType == Constants.DelivAdmin)
+            {
+                <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Create")'" style="padding:10px">
+                    Створити
+                </button>
+            }
+            <form asp-action="Index" method="get" class="btn-group mr-2">
+                
+                <div class="input-group mr-2">
+                    <select name="deliveryStatus" class="form-control"
+                            aria-label="Статус" aria-describedby="btnGroupAddon" asp-items="ViewBag.deliveryStatuses">
+                        <option value="">- всі -</option>
+                    </select>
+                </div>
+                <input type="submit" value="Фільтрувати" class="btn btn-outline-primary" />
+            </form>
+        </div>
+
+
+    </div>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Courier.Name)
+            </td>
+            <td>
+                @Html.Raw($"{item.Location.Street.District.City.City1}," +
+          $"{item.Location.Street.District.District1}," +
+          $"{item.Location.Street.Street1}," +
+          $"{item.Location.BuildingNbr}/{item.Location.Room}")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.OrderId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DeliveryId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.DeliveryId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.DeliveryId">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

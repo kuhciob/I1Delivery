@@ -1,0 +1,102 @@
+﻿@model IEnumerable<KURSOVA.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Замовлення</h1>
+<br />
+<br/>
+
+<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        @if (AccessInfo.UserType == Constants.Operator)
+        {
+            <button class="btn-secondary mr-2" onclick="location.href='@Url.Action("Create")'" style="padding:10px">
+                Створити
+            </button>
+        }
+        <form asp-action="Index" method="get" class="btn-group mr-2">
+            <div class="input-group mr-2">
+                <input type="text" class="form-control" placeholder="Опис" aria-label="Опис"
+                       aria-describedby="btnGroupAddon" name="DescrSearch">
+            </div>
+            <div class="input-group mr-2">
+                <input type="text" class="form-control" placeholder="Номер телефону" aria-label="Номер телефону"
+                       aria-describedby="btnGroupAddon" name="PhoneSearch">
+            </div>
+            <div class="input-group mr-2">
+                <select name="orderStatus" class="form-control"
+                        aria-label="Статус" aria-describedby="btnGroupAddon" asp-items="ViewBag.orderStatuses">
+                    <option value="">- всі -</option>
+                </select>
+            </div>
+            <input type="submit" value="Фільтрувати" class="btn btn-outline-primary" />
+        </form>
+    </div>
+    
+
+</div>
+
+<p>
+   
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDateTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.Raw($"{item.Customer.Name} {item.Customer.Phone}")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDateTime)
+            </td>
+            <td>
+                @if (AccessInfo.UserType == Constants.Operator)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.OrderId">Редагувати | </a> 
+
+                }
+                <a asp-action="Details" asp-route-id="@item.OrderId">Деталі</a>
+
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

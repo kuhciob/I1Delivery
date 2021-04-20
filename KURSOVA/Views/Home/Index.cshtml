@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .crop {
+        height: 200px;
+        width: 200px;
+        overflow: hidden;
+        object-fit: cover;
+    }
+    .homepanelblade {
+        margin: 4em;
+        margin-top: 0
+    }
+</style>
+
+<div class="text-center container">
+    <div class="d-flex align-content-stretch flex-wrap">
+
+        <div class="homepanelblade " onclick="location.href='@Url.Action("Index","Orders")'">
+            <img src="https://www.pinclipart.com/picdir/big/19-190811_customer-order-orders-icon-clipart.png"
+                 alt="Замовлення" class="crop" cursor="pointer">
+            <div class="centered"><h5>Замовлення</h5></div>
+        </div>
+        @if (AccessInfo.UserType != Constants.RestAdmin)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","Deliveries")'" cursor="pointer">
+
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFbCTG_G0VQ-bHlFpJJDcuIwICdhr5PbiznHH7FEyhCoHmKas-MdBAQsDRRUGk9XM2GP8&usqp=CAU"
+                     alt="Доставка" class="crop">
+
+                <div class="centered"><h5>Доставка</h5></div>
+            </div>
+        }
+
+        @if (AccessInfo.UserType != Constants.DelivAdmin)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","Dishes")'" cursor="pointer">
+                <img src=" https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeRw_lZXi-2jp9FaoVVFnsE3RUhwo1BVoHCqizbt4hfnnv-KWrl3iiyZxbdQ7y8JJ13zU&usqp=CAU"
+                     alt="Страви" class="crop">
+                <div class="centered"><h5>Страви</h5></div>
+            </div>
+        }
+        @if (AccessInfo.UserType != Constants.RestAdmin)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","Invoices")'" cursor="pointer">
+                <img src="https://cdn3.iconfinder.com/data/icons/finance-152/64/6-512.png"
+                     alt="Накладні/Рахунки" class="crop">
+
+                <div class="centered"><h5>Накладні/Рахунки</h5></div>
+            </div>
+        }
+
+        @if (AccessInfo.UserType != Constants.RestAdmin && AccessInfo.UserType != Constants.DelivAdmin)
+        {
+            <div class="homepanelblade " onclick="location.href='@Url.Action("Index","Customers")'" cursor="pointer">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxmJvm7D3qTSl9M1T5dToLjwTJvjqI-Obals4v2fO4-r-n-9f195hIiW4Bhw9hhF2q7Ak&usqp=CAU"
+                     alt="Замовники" class="crop">
+
+                <div class="centered"><h5>Замовники</h5></div>
+            </div>
+        }
+
+        @if (AccessInfo.UserType != Constants.DelivAdmin)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","Restaurants")'" cursor="pointer">
+                <img src="https://image.flaticon.com/icons/png/512/1591/1591041.png"
+                     alt="Ресторани" class="crop">
+
+                <div class="centered"><h5>Ресторани</h5></div>
+            </div>
+        }
+
+        @if (AccessInfo.UserType != Constants.DelivAdmin)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","RestaurantDishRelations")'" cursor="pointer">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmgWecK7eciHU8P-EKMawCpq2_MTXCG0iy28MVwr5ftxogztC1m1NSjRfz4YEtg33sKB4&usqp=CAU"
+                     alt="Меню" class="crop">
+
+                <div class="centered"><h5>Меню</h5></div>
+            </div>
+        }
+
+
+        @if (AccessInfo.UserType != Constants.RestAdmin && AccessInfo.UserType != Constants.Operator)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","Couriers")'" cursor="pointer">
+                <img src="~/img/courier-pngrepo-com.png"
+                     alt="Кур'єри" class="crop">
+
+                <div class="centered"><h5>Кур'єри</h5></div>
+            </div>
+        }
+        @if (AccessInfo.UserType != Constants.RestAdmin && AccessInfo.UserType != Constants.Operator)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","SalaryPayments")'" cursor="pointer">
+                <img src="https://www.seekpng.com/png/full/524-5245797_attorney-salary-archives-ldap-icon.png.png"
+                     alt="Заробітня плата" class="crop">
+
+                <div class="centered"><h5>Заробітня плата</h5></div>
+            </div>
+        }
+
+        @if (AccessInfo.UserType != Constants.DelivAdmin && AccessInfo.UserType != Constants.Operator)
+        {
+            <div class="homepanelblade" onclick="location.href='@Url.Action("Index","OrderLines")'">
+                <img src="https://www.flaticon.com/svg/vstatic/svg/1587/1587084.svg?token=exp=1618815639~hmac=245910319e3bcb04ad020e7e8b5d137f"
+                     alt="Замовлення" class="crop" cursor="pointer">
+                <div class="centered"><h5>Замовлення страви</h5></div>
+            </div>
+        }
+
+    </div>
+
+</div>

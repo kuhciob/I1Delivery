@@ -1,0 +1,82 @@
+﻿@model IEnumerable<KURSOVA.Models.SalaryPayment>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Заробітня плата</h1>
+
+<p>
+    <button class="btn-secondary" onclick="location.href='@Url.Action("Create")'" style="padding:10px">
+        Створити
+    </button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StartPeriodDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndPeriodDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveriesCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentForDeliveries)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Premium)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FineAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentAmt)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Courier)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartPeriodDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndPeriodDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveriesCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentForDeliveries)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Premium)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FineAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentAmt)
+            </td>
+            
+            <td>
+                @Html.Raw($"{item.Courier.Name} (id:{item.Courier.CourierId})")
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SalaryPaymentId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.SalaryPaymentId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.SalaryPaymentId">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
